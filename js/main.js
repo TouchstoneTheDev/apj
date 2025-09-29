@@ -1,4 +1,3 @@
-// Starting fresh to build the top-down kitchen game.
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -11,8 +10,8 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 0 }, // No gravity for top-down view
-            debug: false
+            gravity: { y: 400 },
+            debug: false // Ensure debug is off
         }
     }
 };
@@ -20,14 +19,20 @@ const config = {
 const game = new Phaser.Game(config);
 
 // Game variables
-let player;
-let cursors;
-let dirtyDishPileZone, sinkZone, dryingRackZone;
-let carriedDish = null;
-let instructionText, scoreText;
-let score = 0;
+let player, cursors, dirtyDishPile, sink, dryingRack, carriedDish = null, scoreText, timerText, instructionText;
+let score = 0, timeLeft = 60, gameOver = false;
 const DISHES_TO_WIN = 5;
-let gameOver = false;
+let emitter;
+
+// Sound placeholders
+const sounds = {
+    pickup: null,
+    wash: null,
+    score: null,
+    jump: null,
+    win: null,
+    lose: null
+};
 
 function preload() {
     this.load.spritesheet('porter', 'assets/porter.png', { frameWidth: 32, frameHeight: 48 });
@@ -35,83 +40,201 @@ function preload() {
 }
 
 function create() {
-    this.cameras.main.setBackgroundColor('#EFEFEF'); // Light grey background
+    // --- Kitchen Environment ---
+    this.cameras.main.setBackgroundColor('#D3D3D3');
+
+    const platforms = this.physics.add.staticGroup();
+    platforms.create(400, 580, 'ground').setScale(2).refreshBody();
+    platforms.create(150, 450, 'platform'); // Dish pile platform
+    platforms.create(400, 350, 'platform'); // Sink platform
+    platforms.create(650, 450, 'platform'); // Drying rack platform
+
+    // --- Placeholder Textures ---
+    const graphics = this.add.graphics();
+    graphics.fillStyle(0x663300, 1);
+    graphics.fillRect(0, 0, 400, 32);
+    graphics.generateTexture('ground', 400, 32);
+    graphics.fillStyle(0xA0522D, 1);
+    graphics.fillRect(0, 0, 200, 32);
+    graphics.generateTexture('platform', 200, 32);
+    graphics.fillStyle(0xFFC0CB, 1);
+    graphics.fillEllipse(30, 20, 60, 40);
+    graphics.generateTexture('wig', 60, 40);
+    graphics.fillStyle(0xFFFF00, 1);
+    graphics.fillTriangle(0, 50, 25, 0, 50, 50);
+    graphics.generateTexture('topa', 50, 50);
+    graphics.fillStyle(0xffffff, 1);
+    graphics.fillCircle(5, 5, 5);
+    graphics.generateTexture('sparkle', 10, 10);
+    graphics.destroy();
 
     // --- Interaction Zones & Visuals ---
-    dirtyDishPileZone = this.add.zone(100, 300, 150, 200);
-    this.physics.world.enable(dirtyDishPileZone);
-    this.add.rectangle(100, 300, 150, 200, 0x8B4513, 0.3);
-    this.add.text(100, 300, 'Dirty\nDishes', { align: 'center', fill: '#fff' }).setOrigin(0.5);
+    dirtyDishPile = this.add.zone(150, 420, 100, 50);
+    this.physics.world.enable(dirtyDishPile);
+    dirtyDishPile.body.setAllowGravity(false);
+    this.add.sprite(150, 420, 'dish').setTint(0x654321).setScale(2).setAlpha(0.7);
+    this.add.text(150, 420, 'Dirty\nDishes', { align: 'center', fill: '#fff' }).setOrigin(0.5);
 
-    sinkZone = this.add.zone(400, 300, 150, 150);
-    this.physics.world.enable(sinkZone);
-    this.add.rectangle(400, 300, 150, 150, 0xC0C0C0, 0.5);
-    this.add.text(400, 300, 'Sink', { align: 'center' }).setOrigin(0.5);
+    sink = this.add.zone(400, 320, 100, 50);
+    this.physics.world.enable(sink);
+    sink.body.setAllowGravity(false);
+    this.add.rectangle(400, 320, 100, 50, 0xAAAAFF, 0.7);
+    this.add.text(400, 320, 'Sink', { align: 'center' }).setOrigin(0.5);
 
-    dryingRackZone = this.add.zone(700, 300, 150, 200);
-    this.physics.world.enable(dryingRackZone);
-    this.add.rectangle(700, 300, 150, 200, 0xA9A9A9, 0.5);
-    this.add.text(700, 300, 'Drying\nRack', { align: 'center' }).setOrigin(0.5);
+    dryingRack = this.add.zone(650, 420, 100, 50);
+    this.physics.world.enable(dryingRack);
+    dryingRack.body.setAllowGravity(false);
+    this.add.rectangle(650, 420, 100, 50, 0x999999, 0.7);
+    this.add.text(650, 420, 'Drying\nRack', { align: 'center' }).setOrigin(0.5);
 
-    // --- Player Setup ---
-    player = this.physics.add.sprite(400, 500, 'porter', 4); // Start with forward-facing frame
+    // --- Player ---
+    player = this.physics.add.sprite(50, 500, 'porter');
+    player.setBounce(0.1);
     player.setCollideWorldBounds(true);
+    this.physics.add.collider(player, platforms);
+
+    this.anims.create({ key: 'left', frames: this.anims.generateFrameNumbers('porter', { start: 0, end: 3 }), frameRate: 10, repeat: -1 });
+    this.anims.create({ key: 'turn', frames: [ { key: 'porter', frame: 4 } ], frameRate: 20 });
+    this.anims.create({ key: 'right', frames: this.anims.generateFrameNumbers('porter', { start: 5, end: 8 }), frameRate: 10, repeat: -1 });
+
+    // --- Particle Emitter ---
+    emitter = this.add.particles('sparkle').createEmitter({
+        speed: 100,
+        scale: { start: 1, end: 0 },
+        blendMode: 'ADD',
+        lifespan: 600,
+        on: false
+    });
+
+    // --- Easter Egg ---
+    const wig = this.add.sprite(20, 20, 'wig').setInteractive();
+    const topa = this.add.sprite(20, 20, 'topa').setVisible(false);
+    wig.on('pointerdown', () => {
+        topa.setVisible(true);
+        wig.setVisible(false);
+    });
 
     // --- UI ---
-    instructionText = this.add.text(400, 50, 'Go to the dirty dishes and press SPACE.', { fontSize: '18px', fill: '#000' }).setOrigin(0.5);
-    scoreText = this.add.text(400, 80, `Dishes Washed: 0 / ${DISHES_TO_WIN}`, { fontSize: '18px', fill: '#000' }).setOrigin(0.5);
+    const uiBackground = this.add.rectangle(400, 50, 760, 80, 0x000000, 0.5);
+    instructionText = this.add.text(400, 30, `Wash ${DISHES_TO_WIN} dishes!`, { fontSize: '18px', fill: '#fff' }).setOrigin(0.5);
+    scoreText = this.add.text(200, 60, `Washed: 0 / ${DISHES_TO_WIN}`, { fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+    timerText = this.add.text(600, 60, `Time: ${timeLeft}`, { fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
 
-    // --- Controls ---
+    // --- Timer ---
+    this.time.addEvent({
+        delay: 1000,
+        callback: () => {
+            if (!gameOver) {
+                timeLeft--;
+                timerText.setText(`Time: ${timeLeft}`);
+                if (timeLeft <= 0) {
+                    endGame.call(this, false);
+                }
+            }
+        },
+        loop: true
+    });
+
     cursors = this.input.keyboard.createCursorKeys();
 }
 
+function endGame(isWin) {
+    gameOver = true;
+    this.physics.pause();
+    player.anims.play('turn');
+    let message = isWin ? 'You Win!' : 'Time\'s Up!';
+    if (isWin) { /* sounds.win.play(); */ } else { /* sounds.lose.play(); */ }
+    const endText = this.add.text(400, 300, message + '\nPress R to Restart', { fontSize: '48px', fill: '#ff0000', backgroundColor: '#000', align: 'center' }).setOrigin(0.5);
+
+    this.input.keyboard.on('keydown-R', () => {
+        // Reset state
+        score = 0;
+        timeLeft = 60;
+        gameOver = false;
+        carriedDish = null;
+        this.scene.restart();
+    });
+}
+
 function update() {
-    if (gameOver) {
-        player.setVelocity(0);
-        return;
-    }
+    if (gameOver) return;
 
     // --- Player Movement ---
-    player.setVelocity(0);
-    if (cursors.left.isDown) player.setVelocityX(-200);
-    else if (cursors.right.isDown) player.setVelocityX(200);
-    if (cursors.up.isDown) player.setVelocityY(-200);
-    else if (cursors.down.isDown) player.setVelocityY(200);
+    if (cursors.left.isDown) {
+        player.setVelocityX(-160);
+        player.anims.play('left', true);
+    } else if (cursors.right.isDown) {
+        player.setVelocityX(160);
+        player.anims.play('right', true);
+    } else {
+        player.setVelocityX(0);
+        player.anims.play('turn');
+    }
+    if (cursors.up.isDown && player.body.touching.down) {
+        player.setVelocityY(-330);
+        /* sounds.jump.play(); */
+    }
 
-    // --- Interaction Logic ---
+    // --- Interaction Text Handling ---
+    const isOverDirtyPile = this.physics.overlap(player, dirtyDishPile);
+    const isOverSink = this.physics.overlap(player, sink);
+    const isOverDryingRack = this.physics.overlap(player, dryingRack);
+    let instructionVisible = false;
+
+    if (!carriedDish) {
+        if (isOverDirtyPile) {
+            instructionText.setText('Press SPACE to pick up a dish.');
+            instructionVisible = true;
+        }
+    } else {
+        if (carriedDish.isDirty) {
+            if (isOverSink) {
+                instructionText.setText('Press SPACE to wash the dish.');
+                instructionVisible = true;
+            } else {
+                instructionText.setText('Take the dish to the sink.');
+                instructionVisible = true;
+            }
+        } else {
+            if (isOverDryingRack) {
+                instructionText.setText('Press SPACE to place the dish.');
+                instructionVisible = true;
+            } else {
+                instructionText.setText('Take the clean dish to the drying rack.');
+                instructionVisible = true;
+            }
+        }
+    }
+    instructionText.setVisible(instructionVisible);
+
+
+    // --- Action Handling ---
     const spacePressed = Phaser.Input.Keyboard.JustDown(cursors.space);
-    const isOverDirtyPile = this.physics.overlap(player, dirtyDishPileZone);
-    const isOverSink = this.physics.overlap(player, sinkZone);
-    const isOverDryingRack = this.physics.overlap(player, dryingRackZone);
-
     if (spacePressed) {
         if (isOverDirtyPile && !carriedDish) {
-            carriedDish = this.add.sprite(player.x, player.y - 40, 'dish').setTint(0x8B4513);
+            carriedDish = this.add.sprite(player.x, player.y - 40, 'dish').setTint(0x654321);
             carriedDish.isDirty = true;
-            instructionText.setText('Take the dish to the sink.');
+            // sounds.pickup.play();
         } else if (isOverSink && carriedDish && carriedDish.isDirty) {
-            instructionText.setText('Washing...');
-            this.time.delayedCall(1500, () => {
+            this.time.delayedCall(1000, () => {
                 carriedDish.clearTint();
                 carriedDish.isDirty = false;
-                instructionText.setText('Take the clean dish to the drying rack.');
+                emitter.explode(20, carriedDish.x, carriedDish.y);
+                // sounds.wash.play();
             });
         } else if (isOverDryingRack && carriedDish && !carriedDish.isDirty) {
             carriedDish.destroy();
             carriedDish = null;
             score++;
-            scoreText.setText(`Dishes Washed: ${score} / ${DISHES_TO_WIN}`);
-
+            scoreText.setText(`Washed: ${score} / ${DISHES_TO_WIN}`);
+            // sounds.score.play();
             if (score >= DISHES_TO_WIN) {
-                gameOver = true;
-                instructionText.setText('You Win! Mission Complete!');
-            } else {
-                instructionText.setText('Good job! Get another dish.');
+                endGame.call(this, true);
             }
         }
     }
 
-    // Make the dish follow the player
+    // --- Carried Dish Follow ---
     if (carriedDish) {
         carriedDish.x = player.x;
         carriedDish.y = player.y - 40;
