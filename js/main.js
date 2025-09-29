@@ -1,3 +1,4 @@
+// Starting fresh to build the top-down kitchen game.
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -10,6 +11,7 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
+            gravity: { y: 0 }, // No gravity for top-down view
             debug: false
         }
     }
@@ -17,112 +19,101 @@ const config = {
 
 const game = new Phaser.Game(config);
 
+// Game variables
 let player;
 let cursors;
-let dirtyDishPile;
-let sink;
+let dirtyDishPileZone, sinkZone, dryingRackZone;
 let carriedDish = null;
-let washTimer = null;
-let instructionText;
+let instructionText, scoreText;
+let score = 0;
+const DISHES_TO_WIN = 5;
+let gameOver = false;
 
 function preload() {
     this.load.spritesheet('porter', 'assets/porter.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.image('dirty-dish', 'assets/dirty-dish.png');
     this.load.image('dish', 'assets/dish.png');
 }
 
 function create() {
-    this.cameras.main.setBackgroundColor('#cccccc');
+    this.cameras.main.setBackgroundColor('#EFEFEF'); // Light grey background
 
-    const ground = this.add.rectangle(400, 580, 800, 40, 0x663300);
-    this.physics.add.existing(ground, true);
+    // --- Interaction Zones & Visuals ---
+    dirtyDishPileZone = this.add.zone(100, 300, 150, 200);
+    this.physics.world.enable(dirtyDishPileZone);
+    this.add.rectangle(100, 300, 150, 200, 0x8B4513, 0.3);
+    this.add.text(100, 300, 'Dirty\nDishes', { align: 'center', fill: '#fff' }).setOrigin(0.5);
 
-    dirtyDishPile = this.add.rectangle(100, 540, 100, 80, 0x00ff00);
-    sink = this.add.rectangle(700, 540, 100, 80, 0x0000ff);
-    this.add.sprite(100, 540, 'dirty-dish');
+    sinkZone = this.add.zone(400, 300, 150, 150);
+    this.physics.world.enable(sinkZone);
+    this.add.rectangle(400, 300, 150, 150, 0xC0C0C0, 0.5);
+    this.add.text(400, 300, 'Sink', { align: 'center' }).setOrigin(0.5);
 
-    player = this.physics.add.sprite(200, 450, 'porter');
-    player.setBounce(0.2);
+    dryingRackZone = this.add.zone(700, 300, 150, 200);
+    this.physics.world.enable(dryingRackZone);
+    this.add.rectangle(700, 300, 150, 200, 0xA9A9A9, 0.5);
+    this.add.text(700, 300, 'Drying\nRack', { align: 'center' }).setOrigin(0.5);
+
+    // --- Player Setup ---
+    player = this.physics.add.sprite(400, 500, 'porter', 4); // Start with forward-facing frame
     player.setCollideWorldBounds(true);
-    this.physics.add.collider(player, ground);
 
-    this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('porter', { start: 0, end: 3 }),
-        frameRate: 10,
-        repeat: -1
-    });
+    // --- UI ---
+    instructionText = this.add.text(400, 50, 'Go to the dirty dishes and press SPACE.', { fontSize: '18px', fill: '#000' }).setOrigin(0.5);
+    scoreText = this.add.text(400, 80, `Dishes Washed: 0 / ${DISHES_TO_WIN}`, { fontSize: '18px', fill: '#000' }).setOrigin(0.5);
 
-    this.anims.create({
-        key: 'turn',
-        frames: [ { key: 'porter', frame: 4 } ],
-        frameRate: 20
-    });
-
-    this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('porter', { start: 5, end: 8 }),
-        frameRate: 10,
-        repeat: -1
-    });
-
+    // --- Controls ---
     cursors = this.input.keyboard.createCursorKeys();
-
-    instructionText = this.add.text(16, 16, 'Walk to the green area and press SPACE to pick up a dish.', { fontSize: '18px', fill: '#000' });
 }
 
 function update() {
-    if (cursors.left.isDown) {
-        player.setVelocityX(-160);
-        player.anims.play('left', true);
-    } else if (cursors.right.isDown) {
-        player.setVelocityX(160);
-        player.anims.play('right', true);
-    } else {
-        player.setVelocityX(0);
-        player.anims.play('turn');
+    if (gameOver) {
+        player.setVelocity(0);
+        return;
     }
 
-    if (cursors.up.isDown && player.body.touching.down) {
-        player.setVelocityY(-330);
-    }
+    // --- Player Movement ---
+    player.setVelocity(0);
+    if (cursors.left.isDown) player.setVelocityX(-200);
+    else if (cursors.right.isDown) player.setVelocityX(200);
+    if (cursors.up.isDown) player.setVelocityY(-200);
+    else if (cursors.down.isDown) player.setVelocityY(200);
 
-    // Interaction logic
-    const spaceJustPressed = Phaser.Input.Keyboard.JustDown(cursors.space);
-    const playerBounds = player.getBounds();
-    const dirtyDishPileBounds = dirtyDishPile.getBounds();
-    const sinkBounds = sink.getBounds();
+    // --- Interaction Logic ---
+    const spacePressed = Phaser.Input.Keyboard.JustDown(cursors.space);
+    const isOverDirtyPile = this.physics.overlap(player, dirtyDishPileZone);
+    const isOverSink = this.physics.overlap(player, sinkZone);
+    const isOverDryingRack = this.physics.overlap(player, dryingRackZone);
 
-    if (spaceJustPressed) {
-        if (!carriedDish && Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, dirtyDishPileBounds)) {
-            // Pick up dish
-            carriedDish = this.add.sprite(player.x, player.y - 50, 'dirty-dish');
-            instructionText.setText('Carry the dish to the blue sink and press SPACE to wash.');
-        } else if (carriedDish && carriedDish.texture.key === 'dirty-dish' && Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, sinkBounds)) {
-            // Wash dish
+    if (spacePressed) {
+        if (isOverDirtyPile && !carriedDish) {
+            carriedDish = this.add.sprite(player.x, player.y - 40, 'dish').setTint(0x8B4513);
+            carriedDish.isDirty = true;
+            instructionText.setText('Take the dish to the sink.');
+        } else if (isOverSink && carriedDish && carriedDish.isDirty) {
             instructionText.setText('Washing...');
-            if (washTimer) {
-                washTimer.remove();
-            }
-            washTimer = this.time.addEvent({
-                delay: 2000, // 2 seconds to wash
-                callback: () => {
-                    carriedDish.setTexture('dish');
-                    instructionText.setText('Dish is clean! Carry it back to the green area.');
-                },
-                callbackScope: this
+            this.time.delayedCall(1500, () => {
+                carriedDish.clearTint();
+                carriedDish.isDirty = false;
+                instructionText.setText('Take the clean dish to the drying rack.');
             });
-        } else if (carriedDish && carriedDish.texture.key === 'dish' && Phaser.Geom.Intersects.RectangleToRectangle(playerBounds, dirtyDishPileBounds)) {
-            // Drop off clean dish
+        } else if (isOverDryingRack && carriedDish && !carriedDish.isDirty) {
             carriedDish.destroy();
             carriedDish = null;
-            instructionText.setText('Good job! Another dirty dish has appeared.');
-            // For now, we just reset
+            score++;
+            scoreText.setText(`Dishes Washed: ${score} / ${DISHES_TO_WIN}`);
+
+            if (score >= DISHES_TO_WIN) {
+                gameOver = true;
+                instructionText.setText('You Win! Mission Complete!');
+            } else {
+                instructionText.setText('Good job! Get another dish.');
+            }
         }
     }
 
+    // Make the dish follow the player
     if (carriedDish) {
         carriedDish.x = player.x;
-        carriedDish.y = player.y - 50;
+        carriedDish.y = player.y - 40;
     }
 }
