@@ -10,7 +10,7 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 400 }, // Side-scrolling gravity
+            gravity: { y: 400 },
             debug: false
         }
     }
@@ -18,125 +18,162 @@ const config = {
 
 const game = new Phaser.Game(config);
 
+// Game variables
+let player, cursors, carriedDish = null, scoreText, timerText, instructionText;
+let score = 0, timeLeft = 60, gameOver = false;
+const DISHES_TO_WIN = 5;
+let emitter;
+let dirtyDishPile, sink, dryingRack;
+let dirtyDishesGroup;
+
+// Sound placeholders
+const sounds = {
+    pickup: null, wash: null, score: null, jump: null, win: null, lose: null
+};
+
 function preload() {
     this.load.spritesheet('porter', 'assets/porter.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('dish', 'assets/dish.png');
+    this.load.bitmapFont('iceicebaby', 'assets/fonts/iceicebaby.png', 'assets/fonts/iceicebaby.xml');
 }
 
 function create() {
     // --- Kitchen Environment ---
-    this.cameras.main.setBackgroundColor('#D3D3D3'); // Light grey background
+    this.cameras.main.setBackgroundColor('#D3D3D3');
 
-    // Create a group for all platforms for cleaner collision detection
     const platforms = this.physics.add.staticGroup();
-
-    // Main floor
-    platforms.create(400, 580, 'ground').setScale(2).refreshBody(); // We'll create a 'ground' texture
-
-    // Kitchen platforms and shelves
-    platforms.create(600, 400, 'platform'); // A platform for the sink
-    platforms.create(150, 450, 'platform');   // A platform for the dish pile
-    platforms.create(750, 220, 'platform'); // A platform for the drying rack
-
-    // Decorative elements
-    this.add.rectangle(100, 100, 80, 120, 0xADD8E6); // Window
-    this.add.rectangle(700, 100, 80, 120, 0xADD8E6); // Window
-    this.add.rectangle(400, 150, 200, 20, 0x8B4513); // Shelf
-
-    // Entrance (visual only)
-    this.add.rectangle(20, 500, 40, 150, 0x654321);
+    platforms.create(400, 580, 'ground').setScale(2).refreshBody();
+    platforms.create(150, 450, 'platform');
+    platforms.create(400, 350, 'platform');
+    platforms.create(650, 450, 'platform');
 
     // --- Placeholder Textures ---
-    // We'll create these textures dynamically for now
     const graphics = this.add.graphics();
-    graphics.fillStyle(0x663300, 1);
-    graphics.fillRect(0, 0, 400, 32);
-    graphics.generateTexture('ground', 400, 32);
-
-    graphics.fillStyle(0xA0522D, 1);
-    graphics.fillRect(0, 0, 200, 32);
-    graphics.generateTexture('platform', 200, 32);
-
-    // Easter Egg Textures
-    graphics.fillStyle(0xFFC0CB, 1); // Pink for the wig
-    graphics.fillEllipse(30, 20, 60, 40);
-    graphics.generateTexture('wig', 60, 40);
-
-    graphics.fillStyle(0xFFFF00, 1); // Yellow for the topa
-    graphics.fillTriangle(0, 50, 25, 0, 50, 50);
-    graphics.generateTexture('topa', 50, 50);
-
-    // Sparkle particle texture
-    graphics.fillStyle(0xffffff, 1);
-    graphics.fillCircle(5, 5, 5);
-    graphics.generateTexture('sparkle', 10, 10);
+    graphics.fillStyle(0x663300, 1); graphics.fillRect(0, 0, 400, 32); graphics.generateTexture('ground', 400, 32);
+    graphics.fillStyle(0xA0522D, 1); graphics.fillRect(0, 0, 200, 32); graphics.generateTexture('platform', 200, 32);
+    graphics.fillStyle(0xFFC0CB, 1); graphics.fillEllipse(30, 20, 60, 40); graphics.generateTexture('wig', 60, 40);
+    graphics.fillStyle(0xFFFF00, 1); graphics.fillTriangle(0, 50, 25, 0, 50, 50); graphics.generateTexture('topa', 50, 50);
+    graphics.fillStyle(0xffffff, 1); graphics.fillCircle(5, 5, 5); graphics.generateTexture('sparkle', 10, 10);
     graphics.destroy();
 
+    // --- Interaction Zones & Visuals ---
+    dirtyDishesGroup = this.add.group();
+    for (let i = 0; i < DISHES_TO_WIN; i++) {
+        dirtyDishesGroup.create(150, 420 - (i * 5), 'dish').setTint(0x654321);
+    }
+    dirtyDishPile = this.add.zone(150, 420, 100, 100);
+    this.physics.world.enable(dirtyDishPile);
+    dirtyDishPile.body.setAllowGravity(false);
+    this.add.bitmapText(150, 420, 'iceicebaby', 'Dirty\nDishes', 24, 1).setOrigin(0.5);
+
+    sink = this.add.zone(400, 320, 100, 50);
+    this.physics.world.enable(sink);
+    sink.body.setAllowGravity(false);
+    this.add.rectangle(400, 320, 100, 50, 0xAAAAFF, 0.7);
+    this.add.bitmapText(400, 320, 'iceicebaby', 'Sink', 24, 1).setOrigin(0.5);
+
+    dryingRack = this.add.zone(650, 420, 100, 50);
+    this.physics.world.enable(dryingRack);
+    dryingRack.body.setAllowGravity(false);
+    this.add.rectangle(650, 420, 100, 50, 0x999999, 0.7);
+    this.add.bitmapText(650, 420, 'iceicebaby', 'Drying\nRack', 24, 1).setOrigin(0.5);
+
     // --- Player ---
-    this.player = this.physics.add.sprite(100, 450, 'porter');
-    this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, platforms);
+    player = this.physics.add.sprite(50, 500, 'porter');
+    player.setBounce(0.1);
+    player.setCollideWorldBounds(true);
+    this.physics.add.collider(player, platforms);
 
-    this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('porter', { start: 0, end: 3 }),
-        frameRate: 10,
-        repeat: -1
-    });
+    this.anims.create({ key: 'left', frames: this.anims.generateFrameNumbers('porter', { start: 0, end: 3 }), frameRate: 10, repeat: -1 });
+    this.anims.create({ key: 'turn', frames: [ { key: 'porter', frame: 4 } ], frameRate: 20 });
+    this.anims.create({ key: 'right', frames: this.anims.generateFrameNumbers('porter', { start: 5, end: 8 }), frameRate: 10, repeat: -1 });
 
-    this.anims.create({
-        key: 'turn',
-        frames: [ { key: 'porter', frame: 4 } ],
-        frameRate: 20
-    });
+    // --- Particle Emitter ---
+    emitter = this.add.particles('sparkle').createEmitter({ speed: 100, scale: { start: 1, end: 0 }, blendMode: 'ADD', lifespan: 600, on: false });
 
-    this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('porter', { start: 5, end: 8 }),
-        frameRate: 10,
-        repeat: -1
-    });
+    // --- Easter Egg ---
+    const wig = this.add.sprite(20, 20, 'wig').setInteractive();
+    const topa = this.add.sprite(20, 20, 'topa').setVisible(false);
+    wig.on('pointerdown', () => { topa.setVisible(true); wig.setVisible(false); });
 
-    // --- Particle Emitter for Sparkles ---
-    this.emitter = this.add.particles('sparkle').createEmitter({
-        speed: 100,
-        scale: { start: 1, end: 0 },
-        blendMode: 'ADD',
-        lifespan: 600,
-        on: false // Don't start emitting right away
-    });
+    // --- UI ---
+    const uiBackground = this.add.rectangle(400, 50, 760, 80, 0x000000, 0.6);
+    instructionText = this.add.bitmapText(400, 30, 'iceicebaby', `Wash ${DISHES_TO_WIN} dishes!`, 20, 1).setOrigin(0.5);
+    scoreText = this.add.bitmapText(200, 60, 'iceicebaby', `Washed: 0 / ${DISHES_TO_WIN}`, 28, 1).setOrigin(0.5);
+    timerText = this.add.bitmapText(600, 60, 'iceicebaby', `Time: ${timeLeft}`, 28, 1).setOrigin(0.5);
 
-    // We'll store these to use in the gameplay implementation
-    this.cursors = this.input.keyboard.createCursorKeys();
+    // --- Timer ---
+    this.time.addEvent({ delay: 1000, callback: () => {
+        if (!gameOver) { timeLeft--; timerText.setText(`Time: ${timeLeft}`); if (timeLeft <= 0) endGame.call(this, false); }
+    }, loop: true });
 
+    cursors = this.input.keyboard.createCursorKeys();
+}
 
-    // --- Interaction Zones (will be defined later) ---
+function endGame(isWin) {
+    gameOver = true;
+    this.physics.pause();
+    player.anims.play('turn');
+    let message = isWin ? 'You Win!' : 'Time\'s Up!';
+    const endText = this.add.bitmapText(400, 300, 'iceicebaby', message + '\nPress R to Restart', 48, 1).setOrigin(0.5).setCenterAlign();
 
-    // --- Easter Egg Implementation ---
-    const wig = this.add.sprite(400, 130, 'wig').setInteractive(); // Place the wig on the shelf
-    const topa = this.add.sprite(400, 90, 'topa').setVisible(false);
-
-    wig.on('pointerdown', () => {
-        topa.setVisible(true);
-        // Optional: Hide the wig after a click
-        wig.setVisible(false);
+    this.input.keyboard.on('keydown-R', () => {
+        score = 0; timeLeft = 60; gameOver = false; carriedDish = null; this.scene.restart();
     });
 }
 
 function update() {
+    if (gameOver) return;
+
     // --- Player Movement ---
-    if (this.cursors.left.isDown) {
-        this.player.setVelocityX(-160);
-        this.player.anims.play('left', true);
-    } else if (this.cursors.right.isDown) {
-        this.player.setVelocityX(160);
-        this.player.anims.play('right', true);
-    } else {
-        this.player.setVelocityX(0);
-        this.player.anims.play('turn');
+    if (cursors.left.isDown) { player.setVelocityX(-160); player.anims.play('left', true); }
+    else if (cursors.right.isDown) { player.setVelocityX(160); player.anims.play('right', true); }
+    else { player.setVelocityX(0); player.anims.play('turn'); }
+    if (cursors.up.isDown && player.body.touching.down) { player.setVelocityY(-330); }
+
+    // --- Interaction Text Handling ---
+    const isOverDirtyPile = this.physics.overlap(player, dirtyDishPile);
+    const isOverSink = this.physics.overlap(player, sink);
+    const isOverDryingRack = this.physics.overlap(player, dryingRack);
+    instructionText.setVisible(false);
+
+    if (!carriedDish) { if (isOverDirtyPile) { instructionText.setText('Press SPACE to pick up a dish.'); instructionText.setVisible(true); } }
+    else {
+        if (carriedDish.isDirty) {
+            if (isOverSink) { instructionText.setText('Press SPACE to wash the dish.'); instructionText.setVisible(true); }
+            else { instructionText.setText('Take the dish to the sink.'); instructionText.setVisible(true); }
+        } else {
+            if (isOverDryingRack) { instructionText.setText('Press SPACE to place the dish.'); instructionText.setVisible(true); }
+            else { instructionText.setText('Take the clean dish to the drying rack.'); instructionText.setVisible(true); }
+        }
     }
 
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-        this.player.setVelocityY(-330);
+    // --- Action Handling ---
+    const spacePressed = Phaser.Input.Keyboard.JustDown(cursors.space);
+    if (spacePressed) {
+        if (isOverDirtyPile && !carriedDish && dirtyDishesGroup.countActive(true) > 0) {
+            let dishToTake = dirtyDishesGroup.getLast(true);
+            if (dishToTake) {
+                dishToTake.destroy();
+                carriedDish = this.add.sprite(player.x, player.y - 40, 'dish').setTint(0x654321);
+                carriedDish.isDirty = true;
+            }
+        } else if (isOverSink && carriedDish && carriedDish.isDirty) {
+            this.time.delayedCall(1000, () => {
+                carriedDish.clearTint();
+                carriedDish.isDirty = false;
+                emitter.explode(20, carriedDish.x, carriedDish.y);
+            });
+        } else if (isOverDryingRack && carriedDish && !carriedDish.isDirty) {
+            carriedDish.destroy();
+            carriedDish = null;
+            this.add.sprite(650, 420 - (score * 5), 'dish');
+            score++;
+            scoreText.setText(`Washed: ${score} / ${DISHES_TO_WIN}`);
+            if (score >= DISHES_TO_WIN) endGame.call(this, true);
+        }
     }
+
+    // --- Carried Dish Follow ---
+    if (carriedDish) { carriedDish.x = player.x; carriedDish.y = player.y - 40; }
 }
