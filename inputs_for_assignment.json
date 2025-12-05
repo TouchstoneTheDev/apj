@@ -1,0 +1,1168 @@
+{
+  "intent_mapper": {
+    "primary_intents": [
+      {
+        "id": "about_product",
+        "name": "About Product",
+        "description": "Customer is inquiring about product-related information",
+        "secondary_intents": [
+          {
+            "id": "product_info",
+            "name": "Product Info",
+            "description": "General product information like benefits, ingredients, specialty"
+          },
+          {
+            "id": "product_availability",
+            "name": "Product Availability",
+            "description": "Questions about stock, availability in specific regions"
+          },
+          {
+            "id": "product_comparison",
+            "name": "Product Comparison",
+            "description": "Comparing one product with another"
+          }
+        ]
+      },
+      {
+        "id": "order_management",
+        "name": "Order Management",
+        "description": "Customer is managing their orders",
+        "secondary_intents": [
+          {
+            "id": "order_status",
+            "name": "Order Status",
+            "description": "Checking status of existing order"
+          },
+          {
+            "id": "order_cancellation",
+            "name": "Order Cancellation",
+            "description": "Customer wants to cancel an order"
+          },
+          {
+            "id": "order_modification",
+            "name": "Order Modification",
+            "description": "Customer wants to modify an existing order"
+          }
+        ]
+      },
+      {
+        "id": "payment",
+        "name": "Payment",
+        "description": "Payment related queries",
+        "secondary_intents": [
+          {
+            "id": "payment_issues",
+            "name": "Payment Issues",
+            "description": "Problems with payment processing"
+          },
+          {
+            "id": "payment_methods",
+            "name": "Payment Methods",
+            "description": "Questions about available payment options"
+          },
+          {
+            "id": "refund",
+            "name": "Refund",
+            "description": "Questions about refunds"
+          }
+        ]
+      },
+      {
+        "id": "shipping_delivery",
+        "name": "Shipping & Delivery",
+        "description": "Questions about shipping and delivery",
+        "secondary_intents": [
+          {
+            "id": "delivery_time",
+            "name": "Delivery Time",
+            "description": "Questions about delivery timeframes"
+          },
+          {
+            "id": "shipping_cost",
+            "name": "Shipping Cost",
+            "description": "Questions about shipping fees"
+          },
+          {
+            "id": "delivery_issues",
+            "name": "Delivery Issues",
+            "description": "Problems with delivery"
+          }
+        ]
+      },
+      {
+        "id": "recommendation",
+        "name": "Recommendation",
+        "description": "Customer is seeking product recommendations",
+        "secondary_intents": [
+          {
+            "id": "general_recommendation",
+            "name": "General Recommendation",
+            "description": "Looking for product suggestions based on needs"
+          },
+          {
+            "id": "personalized_recommendation",
+            "name": "Personalized Recommendation",
+            "description": "Recommendations based on specific user profile or history"
+          }
+        ]
+      },
+      {
+        "id": "account",
+        "name": "Account",
+        "description": "Account related queries",
+        "secondary_intents": [
+          {
+            "id": "account_issues",
+            "name": "Account Issues",
+            "description": "Problems with account access"
+          },
+          {
+            "id": "account_update",
+            "name": "Account Update",
+            "description": "Updating account information"
+          }
+        ]
+      },
+      {
+        "id": "complaints",
+        "name": "Complaints",
+        "description": "Customer complaints and issues",
+        "secondary_intents": [
+          {
+            "id": "product_quality",
+            "name": "Product Quality",
+            "description": "Issues with product quality"
+          },
+          {
+            "id": "service_complaint",
+            "name": "Service Complaint",
+            "description": "Issues with service provided"
+          }
+        ]
+      },
+      {
+        "id": "other",
+        "name": "Other",
+        "description": "Other queries not fitting existing categories",
+        "secondary_intents": [
+          {
+            "id": "general_inquiry",
+            "name": "General Inquiry",
+            "description": "General questions"
+          },
+          {
+            "id": "feedback",
+            "name": "Feedback",
+            "description": "Customer providing feedback"
+          }
+        ]
+      }
+    ]
+  },
+  "classification_prompt": "You will be provided with the full conversational context between a customer and an agent, including previous messages. Classify each message into a primary category and a secondary category. Follow the predefined mappings strictly.\n\nPrimary Categories:\n1. About Product - Product-related information\n2. Order Management - Managing orders\n3. Payment - Payment related queries\n4. Shipping & Delivery - Shipping and delivery questions\n5. Recommendation - Product recommendations\n6. Account - Account related queries\n7. Complaints - Customer complaints\n8. Other - Other queries\n\nFor each primary category, use the appropriate secondary category based on the specific nature of the query.\n\nRespond with JSON format: {\"primary_intent\": \"...\", \"secondary_intent\": \"...\"}",
+  "customer_messages": [
+    {
+      "id": 1,
+      "conversation_history": [],
+      "current_message": "How do I use this vitamin C serum? Should I apply it morning or night?"
+    },
+    {
+      "id": 2,
+      "conversation_history": [
+        {"role": "customer", "message": "I'm looking for a good moisturizer"},
+        {"role": "agent", "message": "We have several great options. What's your skin type?"}
+      ],
+      "current_message": "I have oily skin. What do you recommend?"
+    },
+    {
+      "id": 3,
+      "conversation_history": [],
+      "current_message": "What are the ingredients in the hydrating face mask?"
+    },
+    {
+      "id": 4,
+      "conversation_history": [],
+      "current_message": "Where is my order? I placed it 5 days ago"
+    },
+    {
+      "id": 5,
+      "conversation_history": [],
+      "current_message": "How much should I apply of this night cream?"
+    },
+    {
+      "id": 6,
+      "conversation_history": [],
+      "current_message": "Can I cancel my order please?"
+    },
+    {
+      "id": 7,
+      "conversation_history": [],
+      "current_message": "Do you have any certifications for your products? Are they cruelty-free?"
+    },
+    {
+      "id": 8,
+      "conversation_history": [],
+      "current_message": "What's the difference between the regular and premium sunscreen?"
+    },
+    {
+      "id": 9,
+      "conversation_history": [],
+      "current_message": "Is this product FDA approved?"
+    },
+    {
+      "id": 10,
+      "conversation_history": [],
+      "current_message": "How often should I use the exfoliating scrub?"
+    },
+    {
+      "id": 11,
+      "conversation_history": [],
+      "current_message": "Can I apply the retinol serum and vitamin C together?"
+    },
+    {
+      "id": 12,
+      "conversation_history": [],
+      "current_message": "My payment failed but money was deducted"
+    },
+    {
+      "id": 13,
+      "conversation_history": [],
+      "current_message": "When will my order arrive?"
+    },
+    {
+      "id": 14,
+      "conversation_history": [],
+      "current_message": "I received a damaged product"
+    },
+    {
+      "id": 15,
+      "conversation_history": [],
+      "current_message": "What's the dosage for the omega-3 supplements?"
+    },
+    {
+      "id": 16,
+      "conversation_history": [],
+      "current_message": "Are your products vegan?"
+    },
+    {
+      "id": 17,
+      "conversation_history": [],
+      "current_message": "I want to change my delivery address"
+    },
+    {
+      "id": 18,
+      "conversation_history": [],
+      "current_message": "Do you have ISO certification?"
+    },
+    {
+      "id": 19,
+      "conversation_history": [],
+      "current_message": "Can you recommend something for dark circles?"
+    },
+    {
+      "id": 20,
+      "conversation_history": [],
+      "current_message": "How to apply this hair mask? Leave it on for how long?"
+    },
+    {
+      "id": 21,
+      "conversation_history": [],
+      "current_message": "Is this suitable for sensitive skin?"
+    },
+    {
+      "id": 22,
+      "conversation_history": [],
+      "current_message": "What payment methods do you accept?"
+    },
+    {
+      "id": 23,
+      "conversation_history": [],
+      "current_message": "I want a refund for my order"
+    },
+    {
+      "id": 24,
+      "conversation_history": [],
+      "current_message": "Do you ship to international locations?"
+    },
+    {
+      "id": 25,
+      "conversation_history": [],
+      "current_message": "Is this dermatologically tested?"
+    },
+    {
+      "id": 26,
+      "conversation_history": [],
+      "current_message": "What time of day should I take these supplements?"
+    },
+    {
+      "id": 27,
+      "conversation_history": [],
+      "current_message": "Can I use this product during pregnancy?"
+    },
+    {
+      "id": 28,
+      "conversation_history": [],
+      "current_message": "Do you have organic products?"
+    },
+    {
+      "id": 29,
+      "conversation_history": [],
+      "current_message": "My order shows delivered but I haven't received it"
+    },
+    {
+      "id": 30,
+      "conversation_history": [],
+      "current_message": "Can I add more items to my existing order?"
+    },
+    {
+      "id": 31,
+      "conversation_history": [],
+      "current_message": "What's the shelf life of this product?"
+    },
+    {
+      "id": 32,
+      "conversation_history": [],
+      "current_message": "How many drops of this essential oil should I use?"
+    },
+    {
+      "id": 33,
+      "conversation_history": [],
+      "current_message": "Is this product GMP certified?"
+    },
+    {
+      "id": 34,
+      "conversation_history": [],
+      "current_message": "Can I use my loyalty points for this purchase?"
+    },
+    {
+      "id": 35,
+      "conversation_history": [],
+      "current_message": "The product I received is different from what I ordered"
+    },
+    {
+      "id": 36,
+      "conversation_history": [],
+      "current_message": "How do I layer skincare products correctly?"
+    },
+    {
+      "id": 37,
+      "conversation_history": [],
+      "current_message": "Are there any side effects of using this?"
+    },
+    {
+      "id": 38,
+      "conversation_history": [],
+      "current_message": "Do you offer EMI options?"
+    },
+    {
+      "id": 39,
+      "conversation_history": [],
+      "current_message": "When will the sold out product be back in stock?"
+    },
+    {
+      "id": 40,
+      "conversation_history": [],
+      "current_message": "I forgot my account password"
+    },
+    {
+      "id": 41,
+      "conversation_history": [],
+      "current_message": "Can you suggest a complete skincare routine for acne?"
+    },
+    {
+      "id": 42,
+      "conversation_history": [],
+      "current_message": "Is this product tested on animals?"
+    },
+    {
+      "id": 43,
+      "conversation_history": [],
+      "current_message": "How long until I see results from this product?"
+    },
+    {
+      "id": 44,
+      "conversation_history": [],
+      "current_message": "Do you have a physical store I can visit?"
+    },
+    {
+      "id": 45,
+      "conversation_history": [],
+      "current_message": "What's the correct order to apply serum and moisturizer?"
+    },
+    {
+      "id": 46,
+      "conversation_history": [],
+      "current_message": "Is COD available for my location?"
+    },
+    {
+      "id": 47,
+      "conversation_history": [],
+      "current_message": "Can I get a sample before buying the full size?"
+    },
+    {
+      "id": 48,
+      "conversation_history": [],
+      "current_message": "Do your products have parabens?"
+    },
+    {
+      "id": 49,
+      "conversation_history": [],
+      "current_message": "I'm not happy with the product quality"
+    },
+    {
+      "id": 50,
+      "conversation_history": [],
+      "current_message": "What's the return policy?"
+    },
+    {
+      "id": 51,
+      "conversation_history": [],
+      "current_message": "Should I apply sunscreen before or after moisturizer?"
+    },
+    {
+      "id": 52,
+      "conversation_history": [],
+      "current_message": "Do you have halal certified products?"
+    },
+    {
+      "id": 53,
+      "conversation_history": [],
+      "current_message": "Can I exchange my product for a different one?"
+    },
+    {
+      "id": 54,
+      "conversation_history": [],
+      "current_message": "Is this product hypoallergenic?"
+    },
+    {
+      "id": 55,
+      "conversation_history": [],
+      "current_message": "How much quantity should I use per application?"
+    },
+    {
+      "id": 56,
+      "conversation_history": [],
+      "current_message": "Do you have USDA organic certification?"
+    },
+    {
+      "id": 57,
+      "conversation_history": [],
+      "current_message": "I want to update my phone number"
+    },
+    {
+      "id": 58,
+      "conversation_history": [],
+      "current_message": "Are your products PETA certified?"
+    },
+    {
+      "id": 59,
+      "conversation_history": [],
+      "current_message": "Can I use this face wash twice a day?"
+    },
+    {
+      "id": 60,
+      "conversation_history": [],
+      "current_message": "What are the key benefits of this product?"
+    },
+    {
+      "id": 61,
+      "conversation_history": [],
+      "current_message": "Is express delivery available?"
+    },
+    {
+      "id": 62,
+      "conversation_history": [],
+      "current_message": "Can pregnant women use this?"
+    },
+    {
+      "id": 63,
+      "conversation_history": [],
+      "current_message": "I want to speak with a human agent"
+    },
+    {
+      "id": 64,
+      "conversation_history": [],
+      "current_message": "Do you have any ongoing discounts?"
+    },
+    {
+      "id": 65,
+      "conversation_history": [],
+      "current_message": "How do I store this product properly?"
+    },
+    {
+      "id": 66,
+      "conversation_history": [],
+      "current_message": "What's the difference between AHA and BHA products?"
+    },
+    {
+      "id": 67,
+      "conversation_history": [],
+      "current_message": "Can I track my order?"
+    },
+    {
+      "id": 68,
+      "conversation_history": [],
+      "current_message": "Is this suitable for kids?"
+    },
+    {
+      "id": 69,
+      "conversation_history": [],
+      "current_message": "Do you have free shipping?"
+    },
+    {
+      "id": 70,
+      "conversation_history": [],
+      "current_message": "What's your warranty policy?"
+    },
+    {
+      "id": 71,
+      "conversation_history": [],
+      "current_message": "Can I use this with other active ingredients?"
+    },
+    {
+      "id": 72,
+      "conversation_history": [],
+      "current_message": "Where can I find clinical studies for this product?"
+    },
+    {
+      "id": 73,
+      "conversation_history": [],
+      "current_message": "I need help choosing between two products"
+    },
+    {
+      "id": 74,
+      "conversation_history": [],
+      "current_message": "What's the expiry date of products you ship?"
+    },
+    {
+      "id": 75,
+      "conversation_history": [],
+      "current_message": "Do you have a subscription option?"
+    },
+    {
+      "id": 76,
+      "conversation_history": [],
+      "current_message": "Can I apply makeup after using this?"
+    },
+    {
+      "id": 77,
+      "conversation_history": [],
+      "current_message": "Is this product non-comedogenic?"
+    },
+    {
+      "id": 78,
+      "conversation_history": [],
+      "current_message": "I accidentally placed a duplicate order"
+    },
+    {
+      "id": 79,
+      "conversation_history": [],
+      "current_message": "How long should I wait between applying different products?"
+    },
+    {
+      "id": 80,
+      "conversation_history": [],
+      "current_message": "Do you have bundle offers?"
+    },
+    {
+      "id": 81,
+      "conversation_history": [],
+      "current_message": "Is this gluten-free?"
+    },
+    {
+      "id": 82,
+      "conversation_history": [],
+      "current_message": "My coupon code is not working"
+    },
+    {
+      "id": 83,
+      "conversation_history": [],
+      "current_message": "Can I mix this serum with my moisturizer?"
+    },
+    {
+      "id": 84,
+      "conversation_history": [],
+      "current_message": "Do you accept international cards?"
+    },
+    {
+      "id": 85,
+      "conversation_history": [],
+      "current_message": "Where are your products manufactured?"
+    },
+    {
+      "id": 86,
+      "conversation_history": [],
+      "current_message": "I'm having an allergic reaction to the product"
+    },
+    {
+      "id": 87,
+      "conversation_history": [],
+      "current_message": "Do you offer gift wrapping?"
+    },
+    {
+      "id": 88,
+      "conversation_history": [],
+      "current_message": "What's the pH level of this cleanser?"
+    },
+    {
+      "id": 89,
+      "conversation_history": [],
+      "current_message": "Can I get an invoice for my order?"
+    },
+    {
+      "id": 90,
+      "conversation_history": [],
+      "current_message": "Is this fragrance-free?"
+    },
+    {
+      "id": 91,
+      "conversation_history": [],
+      "current_message": "How do I apply the under-eye cream correctly?"
+    },
+    {
+      "id": 92,
+      "conversation_history": [],
+      "current_message": "Do you have a loyalty program?"
+    },
+    {
+      "id": 93,
+      "conversation_history": [],
+      "current_message": "Can I use this on broken skin?"
+    },
+    {
+      "id": 94,
+      "conversation_history": [],
+      "current_message": "What's the concentration of vitamin C in this serum?"
+    },
+    {
+      "id": 95,
+      "conversation_history": [],
+      "current_message": "Is same-day delivery available?"
+    },
+    {
+      "id": 96,
+      "conversation_history": [],
+      "current_message": "Can I gift this to someone?"
+    },
+    {
+      "id": 97,
+      "conversation_history": [],
+      "current_message": "What should I do if I miss a dose?"
+    },
+    {
+      "id": 98,
+      "conversation_history": [],
+      "current_message": "Do you ship in eco-friendly packaging?"
+    },
+    {
+      "id": 99,
+      "conversation_history": [],
+      "current_message": "Is this product dermatologist recommended?"
+    },
+    {
+      "id": 100,
+      "conversation_history": [],
+      "current_message": "How many tablets are in one bottle?"
+    },
+    {
+      "id": 101,
+      "conversation_history": [],
+      "current_message": "Can I change the quantity of my order?"
+    },
+    {
+      "id": 102,
+      "conversation_history": [],
+      "current_message": "Is there a mobile app to shop from?"
+    },
+    {
+      "id": 103,
+      "conversation_history": [],
+      "current_message": "What temperature should this be stored at?"
+    },
+    {
+      "id": 104,
+      "conversation_history": [],
+      "current_message": "I ordered the wrong size"
+    },
+    {
+      "id": 105,
+      "conversation_history": [],
+      "current_message": "How do I dilute this essential oil?"
+    },
+    {
+      "id": 106,
+      "conversation_history": [],
+      "current_message": "Do you have referral bonuses?"
+    },
+    {
+      "id": 107,
+      "conversation_history": [],
+      "current_message": "Is this safe for color-treated hair?"
+    },
+    {
+      "id": 108,
+      "conversation_history": [],
+      "current_message": "Why is my order taking so long?"
+    },
+    {
+      "id": 109,
+      "conversation_history": [],
+      "current_message": "Can I schedule my delivery?"
+    },
+    {
+      "id": 110,
+      "conversation_history": [],
+      "current_message": "Do you test for heavy metals in products?"
+    },
+    {
+      "id": 111,
+      "conversation_history": [],
+      "current_message": "I want to delete my account"
+    },
+    {
+      "id": 112,
+      "conversation_history": [],
+      "current_message": "Is this product suitable for all skin types?"
+    },
+    {
+      "id": 113,
+      "conversation_history": [],
+      "current_message": "How long is the delivery time?"
+    },
+    {
+      "id": 114,
+      "conversation_history": [],
+      "current_message": "Can I combine multiple discount codes?"
+    },
+    {
+      "id": 115,
+      "conversation_history": [],
+      "current_message": "What is the SPF level?"
+    },
+    {
+      "id": 116,
+      "conversation_history": [],
+      "current_message": "Do you offer bulk discounts?"
+    },
+    {
+      "id": 117,
+      "conversation_history": [],
+      "current_message": "Is this available in a travel size?"
+    },
+    {
+      "id": 118,
+      "conversation_history": [],
+      "current_message": "What are the active ingredients?"
+    },
+    {
+      "id": 119,
+      "conversation_history": [],
+      "current_message": "Can I use UPI for payment?"
+    },
+    {
+      "id": 120,
+      "conversation_history": [],
+      "current_message": "How do I know if this is the right product for me?"
+    },
+    {
+      "id": 121,
+      "conversation_history": [],
+      "current_message": "I haven't received my refund yet"
+    },
+    {
+      "id": 122,
+      "conversation_history": [],
+      "current_message": "Is this product award-winning?"
+    },
+    {
+      "id": 123,
+      "conversation_history": [],
+      "current_message": "Can I apply this on wet skin?"
+    },
+    {
+      "id": 124,
+      "conversation_history": [],
+      "current_message": "Do you have products without artificial colors?"
+    },
+    {
+      "id": 125,
+      "conversation_history": [],
+      "current_message": "My order was partially delivered"
+    },
+    {
+      "id": 126,
+      "conversation_history": [],
+      "current_message": "Is overnight shipping available?"
+    },
+    {
+      "id": 127,
+      "conversation_history": [],
+      "current_message": "What's the net quantity?"
+    },
+    {
+      "id": 128,
+      "conversation_history": [],
+      "current_message": "Can this be used as a body lotion?"
+    },
+    {
+      "id": 129,
+      "conversation_history": [],
+      "current_message": "Do you have a satisfaction guarantee?"
+    },
+    {
+      "id": 130,
+      "conversation_history": [],
+      "current_message": "Is this product anti-aging?"
+    },
+    {
+      "id": 131,
+      "conversation_history": [],
+      "current_message": "How do I cancel my subscription?"
+    },
+    {
+      "id": 132,
+      "conversation_history": [],
+      "current_message": "What's the difference between AM and PM versions?"
+    },
+    {
+      "id": 133,
+      "conversation_history": [],
+      "current_message": "Is there a waiting list for sold out items?"
+    },
+    {
+      "id": 134,
+      "conversation_history": [],
+      "current_message": "Can I apply this directly or need cotton pad?"
+    },
+    {
+      "id": 135,
+      "conversation_history": [],
+      "current_message": "Do you offer student discounts?"
+    },
+    {
+      "id": 136,
+      "conversation_history": [],
+      "current_message": "Is the packaging recyclable?"
+    },
+    {
+      "id": 137,
+      "conversation_history": [],
+      "current_message": "What's your customer service number?"
+    },
+    {
+      "id": 138,
+      "conversation_history": [],
+      "current_message": "Can this cause purging?"
+    },
+    {
+      "id": 139,
+      "conversation_history": [],
+      "current_message": "How long does one bottle last?"
+    },
+    {
+      "id": 140,
+      "conversation_history": [],
+      "current_message": "Do you ship on weekends?"
+    },
+    {
+      "id": 141,
+      "conversation_history": [],
+      "current_message": "Is this FDA registered?"
+    },
+    {
+      "id": 142,
+      "conversation_history": [],
+      "current_message": "Can I use this for my beard?"
+    },
+    {
+      "id": 143,
+      "conversation_history": [],
+      "current_message": "What happens if product is damaged in transit?"
+    },
+    {
+      "id": 144,
+      "conversation_history": [],
+      "current_message": "Do you have any clinical trials data?"
+    },
+    {
+      "id": 145,
+      "conversation_history": [],
+      "current_message": "Is this product made in India?"
+    },
+    {
+      "id": 146,
+      "conversation_history": [],
+      "current_message": "Can I pay in installments?"
+    },
+    {
+      "id": 147,
+      "conversation_history": [],
+      "current_message": "What's the texture of this cream?"
+    },
+    {
+      "id": 148,
+      "conversation_history": [],
+      "current_message": "Do you have gift cards?"
+    },
+    {
+      "id": 149,
+      "conversation_history": [],
+      "current_message": "How should I introduce this into my routine?"
+    },
+    {
+      "id": 150,
+      "conversation_history": [],
+      "current_message": "Is there a money-back guarantee?"
+    },
+    {
+      "id": 151,
+      "conversation_history": [],
+      "current_message": "Can this be refrigerated?"
+    },
+    {
+      "id": 152,
+      "conversation_history": [],
+      "current_message": "What's the minimum order value?"
+    },
+    {
+      "id": 153,
+      "conversation_history": [],
+      "current_message": "Is this product new?"
+    },
+    {
+      "id": 154,
+      "conversation_history": [],
+      "current_message": "Do you have any bestsellers?"
+    },
+    {
+      "id": 155,
+      "conversation_history": [],
+      "current_message": "Can I use this before getting laser treatment?"
+    },
+    {
+      "id": 156,
+      "conversation_history": [],
+      "current_message": "What's the typical delivery partner you use?"
+    },
+    {
+      "id": 157,
+      "conversation_history": [],
+      "current_message": "Is this leaping bunny certified?"
+    },
+    {
+      "id": 158,
+      "conversation_history": [],
+      "current_message": "How do I track multiple orders?"
+    },
+    {
+      "id": 159,
+      "conversation_history": [],
+      "current_message": "Can I use this while breastfeeding?"
+    },
+    {
+      "id": 160,
+      "conversation_history": [],
+      "current_message": "What's the percentage of niacinamide?"
+    },
+    {
+      "id": 161,
+      "conversation_history": [],
+      "current_message": "Do you price match?"
+    },
+    {
+      "id": 162,
+      "conversation_history": [],
+      "current_message": "Is this safe to use around eyes?"
+    },
+    {
+      "id": 163,
+      "conversation_history": [],
+      "current_message": "When will you launch new products?"
+    },
+    {
+      "id": 164,
+      "conversation_history": [],
+      "current_message": "Can I split payment between two cards?"
+    },
+    {
+      "id": 165,
+      "conversation_history": [],
+      "current_message": "Is this water-resistant?"
+    },
+    {
+      "id": 166,
+      "conversation_history": [],
+      "current_message": "Do you have evening primrose oil?"
+    },
+    {
+      "id": 167,
+      "conversation_history": [],
+      "current_message": "How do I apply toner correctly?"
+    },
+    {
+      "id": 168,
+      "conversation_history": [],
+      "current_message": "What's your privacy policy?"
+    },
+    {
+      "id": 169,
+      "conversation_history": [],
+      "current_message": "Is this reef-safe?"
+    },
+    {
+      "id": 170,
+      "conversation_history": [],
+      "current_message": "Can I change my subscription frequency?"
+    },
+    {
+      "id": 171,
+      "conversation_history": [],
+      "current_message": "What awards has this product won?"
+    },
+    {
+      "id": 172,
+      "conversation_history": [],
+      "current_message": "Do you accept PayPal?"
+    },
+    {
+      "id": 173,
+      "conversation_history": [],
+      "current_message": "How much should I use per square cm?"
+    },
+    {
+      "id": 174,
+      "conversation_history": [],
+      "current_message": "Is there a minimum age to use this?"
+    },
+    {
+      "id": 175,
+      "conversation_history": [],
+      "current_message": "Do you offer insurance for delivery?"
+    },
+    {
+      "id": 176,
+      "conversation_history": [],
+      "current_message": "What are the contraindications?"
+    },
+    {
+      "id": 177,
+      "conversation_history": [],
+      "current_message": "Can I order by phone?"
+    },
+    {
+      "id": 178,
+      "conversation_history": [],
+      "current_message": "Is this product patented?"
+    },
+    {
+      "id": 179,
+      "conversation_history": [],
+      "current_message": "How do I use the roller applicator?"
+    },
+    {
+      "id": 180,
+      "conversation_history": [],
+      "current_message": "Do you have wholesale options?"
+    },
+    {
+      "id": 181,
+      "conversation_history": [],
+      "current_message": "What makes this different from competitors?"
+    },
+    {
+      "id": 182,
+      "conversation_history": [],
+      "current_message": "Can I pick up from your warehouse?"
+    },
+    {
+      "id": 183,
+      "conversation_history": [],
+      "current_message": "Is the preservative system effective?"
+    },
+    {
+      "id": 184,
+      "conversation_history": [],
+      "current_message": "Do you have a newsletter?"
+    },
+    {
+      "id": 185,
+      "conversation_history": [],
+      "current_message": "How long should I let this sit on my skin?"
+    },
+    {
+      "id": 186,
+      "conversation_history": [],
+      "current_message": "Is this product sustainable?"
+    },
+    {
+      "id": 187,
+      "conversation_history": [],
+      "current_message": "What's your exchange policy?"
+    },
+    {
+      "id": 188,
+      "conversation_history": [],
+      "current_message": "Can this stain clothes?"
+    },
+    {
+      "id": 189,
+      "conversation_history": [],
+      "current_message": "Do you have a rewards program?"
+    },
+    {
+      "id": 190,
+      "conversation_history": [],
+      "current_message": "Is this safe for eczema-prone skin?"
+    },
+    {
+      "id": 191,
+      "conversation_history": [],
+      "current_message": "How do I check my order history?"
+    },
+    {
+      "id": 192,
+      "conversation_history": [],
+      "current_message": "What's the difference between serum and ampoule?"
+    },
+    {
+      "id": 193,
+      "conversation_history": [],
+      "current_message": "Do you accept cryptocurrency?"
+    },
+    {
+      "id": 194,
+      "conversation_history": [],
+      "current_message": "Is this good for hyperpigmentation?"
+    },
+    {
+      "id": 195,
+      "conversation_history": [],
+      "current_message": "Can I get product samples with my order?"
+    },
+    {
+      "id": 196,
+      "conversation_history": [],
+      "current_message": "What's your policy on allergens?"
+    },
+    {
+      "id": 197,
+      "conversation_history": [],
+      "current_message": "Do you have combo packs?"
+    },
+    {
+      "id": 198,
+      "conversation_history": [],
+      "current_message": "How does this compare to the original formula?"
+    },
+    {
+      "id": 199,
+      "conversation_history": [],
+      "current_message": "Can I use this in my DIY recipes?"
+    },
+    {
+      "id": 200,
+      "conversation_history": [],
+      "current_message": "What's the order cutoff time for same day dispatch?"
+    }
+  ]
+}

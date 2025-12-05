@@ -1,0 +1,15 @@
+# Intent Expansion Pipeline Dependencies
+# Core dependencies (no external packages required for basic functionality)
+# The pipeline uses only Python standard library for keyword-based analysis
+
+# Optional dependencies for LLM integration
+# Uncomment the provider(s) you want to use:
+
+# OpenAI (GPT-4o-mini)
+# openai>=1.0.0
+
+# Anthropic (Claude)
+# anthropic>=0.18.0
+
+# Google (Gemini)
+# google-generativeai>=0.3.0
