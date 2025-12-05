@@ -1,0 +1,97 @@
+{
+  "metadata": {
+    "generated_at": "2025-12-05T14:56:47.002400",
+    "total_messages_analyzed": 189,
+    "themes_identified": 5,
+    "proposals_generated": 0
+  },
+  "configuration": {
+    "min_cluster_size": 3,
+    "min_cluster_percentage": 1.5,
+    "confidence_threshold": 0.6,
+    "max_proposed_intents": 10
+  },
+  "theme_analysis": {
+    "return_exchange": {
+      "count": 9,
+      "percentage": 4.76,
+      "keywords": [
+        "return",
+        "exchange",
+        "refund",
+        "money back",
+        "guarantee"
+      ],
+      "sample_messages": [
+        "Is the warranty transferable?",
+        "Can I extend my warranty?",
+        "What's included in the warranty?"
+      ]
+    },
+    "product_usage": {
+      "count": 8,
+      "percentage": 4.23,
+      "keywords": [
+        "how to use",
+        "how do i use",
+        "how should i use",
+        "how to apply",
+        "how much"
+      ],
+      "sample_messages": [
+        "How much is the 2024 Hybrid model?",
+        "How long does delivery take after ordering?",
+        "How much is my 2015 Camry worth?"
+      ]
+    },
+    "safety_suitability": {
+      "count": 1,
+      "percentage": 0.53,
+      "keywords": [
+        "safe",
+        "safety",
+        "pregnant",
+        "pregnancy",
+        "breastfeeding"
+      ],
+      "sample_messages": [
+        "What safety features does this have?"
+      ]
+    },
+    "pricing_promotions": {
+      "count": 11,
+      "percentage": 5.82,
+      "keywords": [
+        "discount",
+        "coupon",
+        "promo",
+        "offer",
+        "sale"
+      ],
+      "sample_messages": [
+        "Is there a military discount?",
+        "Do you offer loaner cars during service?",
+        "Do you offer GAP insurance?"
+      ]
+    },
+    "certification_compliance": {
+      "count": 1,
+      "percentage": 0.53,
+      "keywords": [
+        "certified",
+        "certification",
+        "fda",
+        "gmp",
+        "iso"
+      ],
+      "sample_messages": [
+        "Do you have certified pre-owned vehicles?"
+      ]
+    }
+  },
+  "proposed_intents": [],
+  "guardrails": {
+    "warnings": [],
+    "status": "passed"
+  }
+}

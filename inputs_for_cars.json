@@ -1,0 +1,955 @@
+{
+  "intent_mapper": [
+    {
+      "primary_intent_id": "basic_interactions",
+      "primary_intent_name": "Basic Interactions",
+      "secondary_intents": [
+        {
+          "id": "greetings",
+          "name": "Greetings",
+          "description": "When a customer gives greetings only like Hi, hello, good morning etc."
+        },
+        {
+          "id": "acknowledgment",
+          "name": "Acknowledgment",
+          "description": "When a customer gives acknowledgment only like Ok, Thanks, Got it, Alright etc."
+        }
+      ]
+    },
+    {
+      "primary_intent_id": "about_dealership",
+      "primary_intent_name": "About Dealership",
+      "secondary_intents": [
+        {
+          "id": "contact_details",
+          "name": "Contact Details",
+          "description": "When a customer asks about dealership contact information, location, or hours."
+        },
+        {
+          "id": "about_services",
+          "name": "About Services",
+          "description": "When a customer asks about services offered by the dealership."
+        }
+      ]
+    },
+    {
+      "primary_intent_id": "vehicle_information",
+      "primary_intent_name": "Vehicle Information",
+      "secondary_intents": [
+        {
+          "id": "specifications",
+          "name": "Vehicle Specifications",
+          "description": "When customer asks about vehicle specs like engine, horsepower, fuel economy, dimensions."
+        },
+        {
+          "id": "features",
+          "name": "Vehicle Features",
+          "description": "When customer asks about features like safety tech, infotainment, comfort options."
+        },
+        {
+          "id": "pricing",
+          "name": "Pricing",
+          "description": "When customer asks about vehicle pricing, MSRP, or cost."
+        },
+        {
+          "id": "availability",
+          "name": "Availability",
+          "description": "When customer asks about vehicle availability, stock, or inventory."
+        },
+        {
+          "id": "colors_options",
+          "name": "Colors & Options",
+          "description": "When customer asks about available colors, trims, or customization options."
+        },
+        {
+          "id": "comparison",
+          "name": "Vehicle Comparison",
+          "description": "When customer wants to compare different models or brands."
+        }
+      ]
+    },
+    {
+      "primary_intent_id": "test_drive",
+      "primary_intent_name": "Test Drive",
+      "secondary_intents": [
+        {
+          "id": "schedule_test_drive",
+          "name": "Schedule Test Drive",
+          "description": "When customer wants to schedule or book a test drive."
+        },
+        {
+          "id": "test_drive_inquiry",
+          "name": "Test Drive Inquiry",
+          "description": "When customer has questions about test drive process, requirements, or availability."
+        }
+      ]
+    },
+    {
+      "primary_intent_id": "financing",
+      "primary_intent_name": "Financing & Payment",
+      "secondary_intents": [
+        {
+          "id": "financing_options",
+          "name": "Financing Options",
+          "description": "When customer asks about loan options, interest rates, or financing terms."
+        },
+        {
+          "id": "lease_options",
+          "name": "Lease Options",
+          "description": "When customer asks about leasing a vehicle."
+        },
+        {
+          "id": "trade_in",
+          "name": "Trade-In Valuation",
+          "description": "When customer wants to trade in their current vehicle."
+        },
+        {
+          "id": "payment_methods",
+          "name": "Payment Methods",
+          "description": "When customer asks about accepted payment methods."
+        },
+        {
+          "id": "incentives_rebates",
+          "name": "Incentives & Rebates",
+          "description": "When customer asks about current offers, rebates, or incentives."
+        }
+      ]
+    },
+    {
+      "primary_intent_id": "purchase_process",
+      "primary_intent_name": "Purchase Process",
+      "secondary_intents": [
+        {
+          "id": "order_status",
+          "name": "Order Status",
+          "description": "When customer wants to check the status of their vehicle order."
+        },
+        {
+          "id": "delivery_timeline",
+          "name": "Delivery Timeline",
+          "description": "When customer asks about delivery or pickup timeline."
+        },
+        {
+          "id": "documentation",
+          "name": "Documentation Required",
+          "description": "When customer asks about required documents for purchase."
+        },
+        {
+          "id": "reservation",
+          "name": "Vehicle Reservation",
+          "description": "When customer wants to reserve or hold a vehicle."
+        }
+      ]
+    },
+    {
+      "primary_intent_id": "service_maintenance",
+      "primary_intent_name": "Service & Maintenance",
+      "secondary_intents": [
+        {
+          "id": "schedule_service",
+          "name": "Schedule Service",
+          "description": "When customer wants to book a service appointment."
+        },
+        {
+          "id": "service_inquiry",
+          "name": "Service Inquiry",
+          "description": "When customer has questions about maintenance or repairs."
+        },
+        {
+          "id": "warranty",
+          "name": "Warranty Information",
+          "description": "When customer asks about warranty coverage or terms."
+        },
+        {
+          "id": "parts_accessories",
+          "name": "Parts & Accessories",
+          "description": "When customer asks about vehicle parts or accessories."
+        }
+      ]
+    },
+    {
+      "primary_intent_id": "post_purchase",
+      "primary_intent_name": "Post-Purchase Support",
+      "secondary_intents": [
+        {
+          "id": "vehicle_registration",
+          "name": "Vehicle Registration",
+          "description": "When customer has questions about registration process."
+        },
+        {
+          "id": "insurance",
+          "name": "Insurance",
+          "description": "When customer asks about insurance options or requirements."
+        },
+        {
+          "id": "owner_manual",
+          "name": "Owner Manual & Resources",
+          "description": "When customer needs help finding owner manual or vehicle resources."
+        },
+        {
+          "id": "complaint_issue",
+          "name": "Complaint or Issue",
+          "description": "When customer has a complaint or issue with their vehicle or service."
+        }
+      ]
+    }
+  ],
+  "customer_messages": [
+    {
+      "history": "",
+      "current_human_message": "Hi, I'm interested in the new SUV models"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the fuel economy on the 2024 Sedan?"
+    },
+    {
+      "history": "human: Do you have the red color available? - ai: Yes, we have the 2024 Sedan available in Crimson Red. Would you like to schedule a test drive?",
+      "current_human_message": "Yes, when can I come in?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I trade in my 2018 Honda Civic?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What financing options do you have?"
+    },
+    {
+      "history": "human: I ordered a vehicle last month - ai: I can help you check the status. Can you provide your order number or name on the order?",
+      "current_human_message": "Order #45892, when will it arrive?"
+    },
+    {
+      "history": "",
+      "current_human_message": "I need to schedule an oil change"
+    },
+    {
+      "history": "",
+      "current_human_message": "Does this model have adaptive cruise control?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the difference between the LX and EX trim?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Are there any current rebates or incentives?"
+    },
+    {
+      "history": "human: I'm looking for a family SUV - ai: Great! We have several SUV options perfect for families. The Explorer and Highlander are very popular. What's most important to you - space, fuel efficiency, or features?",
+      "current_human_message": "I need three rows of seating"
+    },
+    {
+      "history": "",
+      "current_human_message": "What documents do I need to bring to purchase?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is the warranty transferable?"
+    },
+    {
+      "history": "",
+      "current_human_message": "How much is the 2024 Hybrid model?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I test drive this weekend?"
+    },
+    {
+      "history": "human: I want to lease a vehicle - ai: Excellent choice! Leasing offers lower monthly payments and flexibility. Are you interested in a specific model?",
+      "current_human_message": "What are the lease terms?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have this model in stock?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's your dealership address?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I put a deposit to hold this car?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What safety features does this have?"
+    },
+    {
+      "history": "human: My check engine light is on - ai: I'm sorry to hear that. We should get that checked right away. Would you like to schedule a diagnostic appointment?",
+      "current_human_message": "Yes, today if possible"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you sell roof racks?"
+    },
+    {
+      "history": "",
+      "current_human_message": "How do I register my new vehicle?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Compare the sedan vs the coupe model"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the horsepower on the V6 engine?"
+    },
+    {
+      "history": "human: I received my car yesterday - ai: Congratulations on your new vehicle! How can I assist you today?",
+      "current_human_message": "Where can I find the owner's manual online?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you accept credit cards?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the towing capacity?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a military discount?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I customize the interior color?"
+    },
+    {
+      "history": "human: I need new tires - ai: We can definitely help with that. What vehicle do you have?",
+      "current_human_message": "2022 Explorer, all-season tires"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's included in the 30,000 mile service?"
+    },
+    {
+      "history": "",
+      "current_human_message": "How long does delivery take after ordering?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have certified pre-owned vehicles?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the ground clearance on the SUV?"
+    },
+    {
+      "history": "human: My car is making a strange noise - ai: That's concerning. Can you describe the noise and when it happens?",
+      "current_human_message": "It's a grinding sound when I brake"
+    },
+    {
+      "history": "",
+      "current_human_message": "Are there any special college graduate programs?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the cargo space in cubic feet?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get remote start installed?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What insurance do you recommend?"
+    },
+    {
+      "history": "human: I want to buy - ai: Wonderful! Let me help you find the perfect vehicle. What type are you interested in?",
+      "current_human_message": "Something good on gas"
+    },
+    {
+      "history": "",
+      "current_human_message": "How much is my 2015 Camry worth?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Does it have Apple CarPlay?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the monthly payment for 60 months?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Are you open on Sundays?"
+    },
+    {
+      "history": "human: I need to cancel my service appointment - ai: I can help with that. Can you provide your appointment date and name?",
+      "current_human_message": "It's for tomorrow, John Smith"
+    },
+    {
+      "history": "",
+      "current_human_message": "What colors does the truck come in?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is four-wheel drive standard?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I extend my warranty?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the 0-60 time?"
+    },
+    {
+      "history": "human: I'm having trouble with the Bluetooth - ai: I'm sorry to hear that. Have you tried restarting your phone and the vehicle's system?",
+      "current_human_message": "Yes, still not connecting"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you offer loaner cars during service?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the cheapest model you have?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I order a vehicle that's not in stock?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the bed length on the pickup truck?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you buy cars for cash?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a waiting list for this model?"
+    },
+    {
+      "history": "human: Thanks for your help! - ai: You're very welcome! Is there anything else I can assist you with?",
+      "current_human_message": "No, that's all"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the seating capacity?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I negotiate the price?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's included in the warranty?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have electric vehicles?"
+    },
+    {
+      "history": "human: I'm interested in the hybrid - ai: Great choice! The hybrid offers excellent fuel economy. Would you like to know more about the specs or schedule a test drive?",
+      "current_human_message": "What's the electric range?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I bring my dog to the test drive?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the maintenance schedule?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have midnight blue in the luxury trim?"
+    },
+    {
+      "history": "",
+      "current_human_message": "How long is the test drive?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get winter tires installed?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the interest rate?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is roadside assistance included?"
+    },
+    {
+      "history": "human: My airbag light came on - ai: That's a safety concern we need to address immediately. Can you bring the vehicle in today?",
+      "current_human_message": "What time are you open until?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do I need an appointment for service?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the maximum towing weight?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I test drive multiple vehicles?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the difference between AWD and 4WD?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you offer GAP insurance?"
+    },
+    {
+      "history": "",
+      "current_human_message": "How often should I change the oil?"
+    },
+    {
+      "history": "human: I just bought a car from you - ai: Congratulations! We're so happy to have you as a customer. How can I help you today?",
+      "current_human_message": "How do I set up the mobile app?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the wheelbase measurement?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get a price quote via email?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have a parts department?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the turning radius?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is the sunroof panoramic or regular?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I pay with a check?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's your best SUV for off-roading?"
+    },
+    {
+      "history": "human: My key fob isn't working - ai: That's frustrating. It might just need a new battery. Would you like to come in and we can check it?",
+      "current_human_message": "Can you replace the battery?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you offer student discounts?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the payload capacity?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I order floor mats?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What audio system does it have?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a delivery fee?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get LED headlights?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the fuel tank capacity?"
+    },
+    {
+      "history": "human: I want to upgrade my stereo - ai: We can definitely help with that! Our service department does custom audio installations. What are you looking for?",
+      "current_human_message": "Something with better bass"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have a loyalty program?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the acceleration like?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I bring someone with me to test drive?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is synthetic oil required?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the cost of extended warranty?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you detail cars?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the crash test rating?"
+    },
+    {
+      "history": "human: I need to update my contact information - ai: I can help with that. What information needs to be updated?",
+      "current_human_message": "My phone number changed"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a convenience package available?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the resale value typically?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I finance with bad credit?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have winter packages?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the transmission type?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get tinted windows?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a hybrid version of this model?"
+    },
+    {
+      "history": "human: I'm moving and need to transfer my service - ai: No problem! Where are you moving to? I can help you find a dealership in your new area.",
+      "current_human_message": "I'm going to Texas"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the headroom in the back seat?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you offer scratch and dent repair?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get heated seats installed?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the total cost out the door?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have shuttle service during repairs?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the legroom measurement?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I transfer my warranty to a new owner?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is premium gas required?"
+    },
+    {
+      "history": "human: I got a recall notice - ai: Thank you for letting us know. We'll get that taken care of right away. Can you provide your VIN number?",
+      "current_human_message": "Do I need to pay for recall work?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the difference between Sport and Touring?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get a vehicle history report?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have demo vehicles for sale?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the technology package include?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a fee for test drives?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get a moonroof?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the curb weight?"
+    },
+    {
+      "history": "human: I love the car but need to think about it - ai: Absolutely, take your time! This is a big decision. Can I answer any other questions to help you decide?",
+      "current_human_message": "How long will this deal last?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have WiFi hotspot capability?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the cylinder configuration?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I schedule a virtual tour?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a sport mode?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's included in the premium package?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you buy lease returns?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get pin striping?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the compression ratio?"
+    },
+    {
+      "history": "human: My navigation system isn't working - ai: I'm sorry about that. Let's troubleshoot it. Is it not loading at all or is it showing an error?",
+      "current_human_message": "It says map data is outdated"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the down payment requirement?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you install bike racks?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there ambient lighting?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the service interval?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get remote engine start?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have electric charging stations?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the power output?"
+    },
+    {
+      "history": "human: I need to reschedule my appointment - ai: No problem! What date works better for you?",
+      "current_human_message": "Next Tuesday afternoon"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there blind spot monitoring?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the depreciation rate?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get leather seats?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you offer tire rotation service?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the recommended tire pressure?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I lease with no money down?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there lane keeping assist?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the storage capacity?"
+    },
+    {
+      "history": "human: I saw a commercial about a special offer - ai: Great! We have several promotions running. Which model were you interested in?",
+      "current_human_message": "The one with 0% financing"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you do alignments?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the suspension type?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get parking sensors?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a panoramic camera?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the door count?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you replace windshields?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I custom order?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the price before taxes?"
+    },
+    {
+      "history": "human: The AC isn't blowing cold - ai: That's not good, especially in this weather. We should check the refrigerant. Can you bring it in this week?",
+      "current_human_message": "How much does AC repair usually cost?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a premium sound system?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the brake type?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get a hitch installed?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you offer senior discounts?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the seating material?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there automatic emergency braking?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get mudflaps?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the dashboard display size?"
+    },
+    {
+      "history": "human: I want to sell my car to you - ai: We're always interested in quality vehicles! What year, make, and model do you have?",
+      "current_human_message": "2019 Toyota Camry with 45k miles"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you match competitor prices?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the trunk space?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get seat covers?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there wireless charging?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the fuel type?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you have a body shop?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I test drive overnight?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the ride height?"
+    },
+    {
+      "history": "human: My tire pressure light is on - ai: That happens sometimes with temperature changes. Do you know when you last checked your tire pressure?",
+      "current_human_message": "No, can you check them?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there a heads-up display?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the drivetrain?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get running boards?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Do you offer paintless dent repair?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the USB port count?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Is there voice recognition?"
+    },
+    {
+      "history": "",
+      "current_human_message": "Can I get splash guards?"
+    },
+    {
+      "history": "",
+      "current_human_message": "What's the warranty mileage?"
+    },
+    {
+      "history": "human: Ok thanks - ai: You're welcome! Is there anything else I can help you with today?",
+      "current_human_message": "No I'm good"
+    }
+  ]
+}

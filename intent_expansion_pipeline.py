@@ -235,7 +235,15 @@ class IntentHierarchyManager:
     
     def _load_hierarchy(self, intent_mapper: dict):
         """Load intent hierarchy from mapper configuration."""
-        for primary in intent_mapper.get('primary_intents', []):
+        # Handle both array and object formats
+        if isinstance(intent_mapper, list):
+            # Array format: intent_mapper is directly a list of primary intents
+            primary_list = intent_mapper
+        else:
+            # Object format: intent_mapper has 'primary_intents' key
+            primary_list = intent_mapper.get('primary_intents', [])
+        
+        for primary in primary_list:
             secondary_intents = [
                 SecondaryIntent(
                     id=sec.get('id', ''),
@@ -246,8 +254,8 @@ class IntentHierarchyManager:
             ]
             
             self.primary_intents.append(PrimaryIntent(
-                id=primary.get('id', ''),
-                name=primary.get('name', ''),
+                id=primary.get('primary_intent_id', primary.get('id', '')),
+                name=primary.get('primary_intent_name', primary.get('name', '')),
                 description=primary.get('description', ''),
                 secondary_intents=secondary_intents
             ))
@@ -571,7 +579,7 @@ Respond in JSON format:
         try:
             import google.generativeai as genai
             genai.configure(api_key=self.api_key)
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = genai.GenerativeModel('gemini-2.0-flash-exp')
             response = model.generate_content(prompt)
             return response.text
         except ImportError:
@@ -838,19 +846,29 @@ class IntentExpansionPipeline:
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
         
-        # Parse customer messages
-        messages = [
-            CustomerMessage(
-                id=msg.get('id', i),
-                current_message=msg.get('current_message', ''),
-                conversation_history=msg.get('conversation_history', [])
-            )
-            for i, msg in enumerate(data.get('customer_messages', []))
-        ]
+        # Parse customer messages (handle both formats)
+        messages = []
+        for i, msg in enumerate(data.get('customer_messages', [])):
+            # Handle different field names
+            current_msg = msg.get('current_message') or msg.get('current_human_message', '')
+            history = msg.get('conversation_history', [])
+            
+            # If history is a string (old format), convert it to list format
+            if isinstance(history, str) or msg.get('history'):
+                history = []  # For simplicity, we'll just use the current message
+            
+            messages.append(CustomerMessage(
+                id=msg.get('id', i + 1),
+                current_message=current_msg,
+                conversation_history=history
+            ))
         
         logger.info(f"Loaded {len(messages)} customer messages")
         
-        return messages, data.get('intent_mapper', {})
+        # Extract intent_mapper
+        intent_mapper = data.get('intent_mapper', {})
+        
+        return messages, intent_mapper
     
     def run(self, input_filepath: str, output_filepath: Optional[str] = None) -> dict:
         """
