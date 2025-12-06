@@ -2,6 +2,25 @@
 intent_analysis_report.json
 intent_analysis_report.md
 
+# Environment and secrets - NEVER commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+.secrets
+secrets.json
+secrets.yaml
+secrets.yml
+credentials.json
+
+# API Keys and tokens
+**/api_keys.json
+**/api_keys.yaml
+**/tokens.json
+**/tokens.yaml
+
 # Python
 __pycache__/
 *.py[cod]
